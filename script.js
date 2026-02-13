@@ -199,26 +199,19 @@ if (cat) {
 }
 
 function startGame() {
-    // Ask for easter egg code
-    const code = prompt('Enter a number for a possible surprise! 🎁');
-    if (code === '2013') {
-        gameState.lives = 3;
-        gameState.hasBooster = true;
-        alert('🎉 EASTER EGG UNLOCKED! You have 3 lives and a booster!');
-    } else {
-        gameState.lives = 1;
-        gameState.hasBooster = false;
-    }
-    
     document.getElementById('instructionsScreen').classList.add('hidden');
     gameState.currentState = GAME_STATE.RUNNING;
     gameState.score = 0;
     gameState.speed = GAME_CONFIG.initialSpeed;
     gameState.distance = 0;
     gameState.time = 0;
+    gameState.lives = 1;
+    gameState.hasBooster = false;
     player.lane = 1;
     player.y = gameState.groundLevel;
     player.velocityY = 0;
+    player.isJumping = false;
+    player.isSliding = false;
     obstacles = [];
     coins = [];
     lastObstacleTime = 0;
@@ -328,14 +321,11 @@ function updateObstacles() {
         // Remove obstacles that are off screen
         if (obstacles[i].y > canvas.height) {
             obstacles.splice(i, 1);
-            gameState.score += 10; // Point for dodging obstacle
+            gameState.score += 25; // Point for dodging obstacle
         } else {
             // Check collision
             if (checkCollision(player, obstacles[i])) {
-                // Only end game if player doesn't have booster (invincible mode)
-                if (!gameState.hasBooster) {
-                    gameOver();
-                }
+                gameOver();
             }
         }
     }
@@ -366,7 +356,7 @@ function updateCoins() {
         // Check collection
         if (checkCoinCollision(player, coins[i])) {
             coins.splice(i, 1);
-            gameState.score += 50;
+            gameState.score += 100;
         } else if (coins[i].y > canvas.height) {
             coins.splice(i, 1);
         }
@@ -402,8 +392,8 @@ function updateGameState() {
         gameState.speed += GAME_CONFIG.speedIncrement;
     }
 
-    // Score increases with time
-    gameState.score = Math.floor(gameState.score + 0.1);
+    // Score increases with time - increased for faster progression
+    gameState.score = Math.floor(gameState.score + 1);
 
     // Check for win condition
     if (gameState.score >= 1000) {
@@ -533,19 +523,9 @@ function drawCoins() {
 }
 
 function drawUI() {
-    // Draw lives and booster status
+    // Draw game state info if needed
     if (gameState.currentState === GAME_STATE.RUNNING) {
-        // Lives display
-        ctx.fillStyle = '#ff6b6b';
-        ctx.font = 'bold 20px Arial';
-        ctx.textAlign = 'right';
-        ctx.fillText(`Lives: ${gameState.lives}`, canvas.width - 20, 50);
-        
-        // Booster indicator
-        if (gameState.hasBooster) {
-            ctx.fillStyle = '#ffd700';
-            ctx.fillText('⭐ BOOSTER ACTIVE', canvas.width - 20, 80);
-        }
+        // Can add additional UI elements here if needed
     }
 }
 

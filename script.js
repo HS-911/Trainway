@@ -15,7 +15,8 @@ const GAME_STATE = {
     INSTRUCTIONS: 'instructions',
     RUNNING: 'running',
     PAUSED: 'paused',
-    GAME_OVER: 'gameOver'
+    GAME_OVER: 'gameOver',
+    WIN: 'win'
 };
 
 // Game Configuration
@@ -23,9 +24,9 @@ const GAME_CONFIG = {
     lanes: 3,
     laneWidth: 0,
     playerSize: 0,
-    initialSpeed: 4,
-    maxSpeed: 12,
-    speedIncrement: 0.001,
+    initialSpeed: 2.5,
+    maxSpeed: 8,
+    speedIncrement: 0.0005,
     obstacleWidth: 0,
     obstacleHeight: 0,
     coinRadius: 0,
@@ -65,12 +66,13 @@ let gameState = {
     paused: false,
     lives: 1,
     hasBooster: false,
-    groundLevel: 0  // Will be set based on canvas height
+    groundLevel: 0,  // Will be set based on canvas height
+    catTouched: false
 };
 
 // Set ground level after canvas is ready
 function setGroundLevel() {
-    gameState.groundLevel = canvas.height * 0.65; // 65% down the screen (below middle)
+    gameState.groundLevel = canvas.height * 0.80; // 80% down the screen (even lower)
 }
 
 // Player Object
@@ -173,6 +175,28 @@ document.getElementById('startBtn').addEventListener('click', startGame);
 document.getElementById('pauseBtn').addEventListener('click', togglePause);
 document.getElementById('resumeBtn').addEventListener('click', togglePause);
 document.getElementById('restartBtn').addEventListener('click', restartGame);
+document.getElementById('winRestartBtn').addEventListener('click', restartGame);
+
+// Cat interaction handler
+const cat = document.getElementById('catImage');
+if (cat) {
+    cat.addEventListener('click', () => {
+        gameState.catTouched = true;
+        document.getElementById('catMessage').textContent = 'Meow, Sami7oda';
+        cat.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            cat.style.transform = 'scale(1)';
+        }, 200);
+    });
+    cat.addEventListener('touchend', () => {
+        gameState.catTouched = true;
+        document.getElementById('catMessage').textContent = 'Meow, Sami7oda';
+        cat.style.transform = 'scale(1.1)';
+        setTimeout(() => {
+            cat.style.transform = 'scale(1)';
+        }, 200);
+    });
+}
 
 function startGame() {
     // Ask for easter egg code
@@ -230,6 +254,7 @@ function gameOver() {
 
 function restartGame() {
     document.getElementById('gameOverScreen').classList.add('hidden');
+    document.getElementById('winScreen').classList.add('hidden');
     document.getElementById('instructionsScreen').classList.remove('hidden');
     gameState.currentState = GAME_STATE.INSTRUCTIONS;
     gameState.score = 0;
@@ -238,6 +263,7 @@ function restartGame() {
     gameState.time = 0;
     gameState.lives = 1;
     gameState.hasBooster = false;
+    gameState.catTouched = false;
     player.lane = 1;
     player.y = gameState.groundLevel;
     player.velocityY = 0;
@@ -375,6 +401,14 @@ function updateGameState() {
 
     // Score increases with time
     gameState.score = Math.floor(gameState.score + 0.1);
+
+    // Check for win condition
+    if (gameState.score >= 2000) {
+        gameState.finalScore = gameState.score;
+        gameState.currentState = GAME_STATE.WIN;
+        gameState.catTouched = false;
+        document.getElementById('winScreen').classList.remove('hidden');
+    }
 
     updatePlayer();
     updateObstacles();
@@ -538,6 +572,8 @@ function gameLoop(currentTime) {
     // Update HUD
     if (gameState.currentState === GAME_STATE.RUNNING) {
         document.getElementById('score').textContent = `Score: ${Math.floor(gameState.score)}`;
+    } else if (gameState.currentState === GAME_STATE.WIN) {
+        document.getElementById('winScore').textContent = Math.floor(gameState.finalScore);
     }
 
     requestAnimationFrame(gameLoop);

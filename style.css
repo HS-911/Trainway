@@ -145,7 +145,91 @@ canvas {
     transform: scale(0.95);
     box-shadow: 0 0 25px rgba(255, 0, 85, 0.8);
 }
+/* Win Screen */
+.win-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    animation: fadeIn 0.3s ease;
+}
 
+.win-screen.hidden {
+    display: none;
+}
+
+.win-content {
+    text-align: center;
+    animation: slideUp 0.4s ease;
+}
+
+.win-title {
+    font-size: 64px;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 20px #00ff00, 0 0 40px rgba(0, 255, 0, 0.6);
+    margin-bottom: 30px;
+    font-family: 'Courier New', monospace;
+}
+
+.win-score {
+    font-size: 32px;
+    color: #ffd700;
+    text-shadow: 0 0 10px #ffd700;
+    margin-bottom: 40px;
+    font-family: 'Courier New', monospace;
+}
+
+.cat-container {
+    margin: 40px 0;
+}
+
+.cat {
+    font-size: 120px;
+    cursor: pointer;
+    display: inline-block;
+    transition: all 0.3s ease;
+    filter: drop-shadow(0 0 20px rgba(255, 200, 0, 0.6));
+}
+
+.cat:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 30px rgba(255, 200, 0, 0.9));
+}
+
+.cat-message {
+    font-size: 32px;
+    color: #ff00ff;
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px rgba(255, 0, 255, 0.5);
+    margin-top: 20px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+}
+
+.win-restart-btn {
+    background: linear-gradient(45deg, #00ff00, #00ffff);
+    border: 2px solid #00ff00;
+    color: black;
+    padding: 15px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    text-transform: uppercase;
+}
+
+.win-restart-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+}
 /* Pause Screen */
 .pause-screen {
     position: fixed;
@@ -309,6 +393,27 @@ canvas {
         font-size: 20px;
     }
 
+    .win-title {
+        font-size: 48px;
+    }
+
+    .win-score {
+        font-size: 24px;
+    }
+
+    .cat {
+        font-size: 80px;
+    }
+
+    .cat-message {
+        font-size: 24px;
+    }
+
+    .win-restart-btn {
+        padding: 12px 30px;
+        font-size: 20px;
+    }
+
     .instructions-title {
         font-size: 42px;
     }
@@ -355,6 +460,28 @@ canvas {
     .restart-btn,
     .resume-btn,
     .start-btn {
+        padding: 10px 25px;
+        font-size: 18px;
+        border-radius: 8px;
+    }
+
+    .win-title {
+        font-size: 36px;
+    }
+
+    .win-score {
+        font-size: 18px;
+    }
+
+    .cat {
+        font-size: 60px;
+    }
+
+    .cat-message {
+        font-size: 18px;
+    }
+
+    .win-restart-btn {
         padding: 10px 25px;
         font-size: 18px;
         border-radius: 8px;

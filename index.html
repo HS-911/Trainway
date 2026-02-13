@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Trainway - Endless Runner</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <canvas id="gameCanvas"></canvas>
+        
+        <!-- HUD -->
+        <div id="hud" class="hud">
+            <div id="score" class="score-display">Score: 0</div>
+            <button id="pauseBtn" class="control-btn pause-btn">⏸</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="game-over-screen hidden">
+            <div class="game-over-content">
+                <div class="game-over-title">GAME OVER</div>
+                <div class="final-score">Score: <span id="finalScore">0</span></div>
+                <button id="restartBtn" class="restart-btn">RESTART</button>
+            </div>
+        </div>
+
+        <!-- Pause Screen -->
+        <div id="pauseScreen" class="pause-screen hidden">
+            <div class="pause-content">
+                <div class="pause-title">PAUSED</div>
+                <button id="resumeBtn" class="resume-btn">RESUME</button>
+            </div>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div id="instructionsScreen" class="instructions-screen">
+            <div class="instructions-content">
+                <div class="instructions-title">TRAINWAY</div>
+                <div class="instructions-text">
+                    <p>🎮 SWIPE LEFT/RIGHT to change lanes</p>
+                    <p>⬆️ SWIPE UP to jump</p>
+                    <p>⬇️ SWIPE DOWN to slide</p>
+                    <p>💰 Collect coins for bonus points</p>
+                    <p>⚠️ Avoid obstacles</p>
+                </div>
+                <button id="startBtn" class="start-btn">START GAME</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

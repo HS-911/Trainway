@@ -1,0 +1,362 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #1a1a2e;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    touch-action: none;
+    position: fixed;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#gameContainer {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    overflow: hidden;
+}
+
+canvas {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    height: 100%;
+    touch-action: none;
+}
+
+/* HUD */
+.hud {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.score-display {
+    font-size: 24px;
+    font-weight: bold;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00, 0 0 20px rgba(0, 255, 0, 0.5);
+    font-family: 'Courier New', monospace;
+    pointer-events: auto;
+}
+
+.control-btn {
+    pointer-events: auto;
+    background: rgba(0, 200, 255, 0.8);
+    border: 2px solid #00ffff;
+    color: white;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+.control-btn:active {
+    background: rgba(0, 200, 255, 1);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+    transform: scale(0.95);
+}
+
+/* Game Over Screen */
+.game-over-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    animation: fadeIn 0.3s ease;
+}
+
+.game-over-screen.hidden {
+    display: none;
+}
+
+.game-over-content {
+    text-align: center;
+    animation: slideUp 0.4s ease;
+}
+
+.game-over-title {
+    font-size: 64px;
+    font-weight: bold;
+    color: #ff0055;
+    text-shadow: 0 0 20px #ff0055, 0 0 40px rgba(255, 0, 85, 0.6);
+    margin-bottom: 30px;
+    font-family: 'Courier New', monospace;
+}
+
+.final-score {
+    font-size: 32px;
+    color: #00ff00;
+    text-shadow: 0 0 10px #00ff00;
+    margin-bottom: 40px;
+    font-family: 'Courier New', monospace;
+}
+
+.restart-btn {
+    background: linear-gradient(45deg, #ff0055, #ff6600);
+    border: 2px solid #ff0055;
+    color: white;
+    padding: 15px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(255, 0, 85, 0.5);
+    text-transform: uppercase;
+}
+
+.restart-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 25px rgba(255, 0, 85, 0.8);
+}
+
+/* Pause Screen */
+.pause-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 150;
+    animation: fadeIn 0.3s ease;
+}
+
+.pause-screen.hidden {
+    display: none;
+}
+
+.pause-content {
+    text-align: center;
+    animation: slideUp 0.4s ease;
+}
+
+.pause-title {
+    font-size: 56px;
+    font-weight: bold;
+    color: #00ffff;
+    text-shadow: 0 0 20px #00ffff;
+    margin-bottom: 40px;
+    font-family: 'Courier New', monospace;
+}
+
+.resume-btn {
+    background: linear-gradient(45deg, #00ff00, #00ccff);
+    border: 2px solid #00ff00;
+    color: black;
+    padding: 15px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+    text-transform: uppercase;
+}
+
+.resume-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+}
+
+/* Instructions Screen */
+.instructions-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 180;
+    animation: fadeIn 0.3s ease;
+}
+
+.instructions-screen.hidden {
+    display: none;
+}
+
+.instructions-content {
+    text-align: center;
+    padding: 20px;
+    max-width: 90%;
+    animation: slideUp 0.5s ease;
+}
+
+.instructions-title {
+    font-size: 56px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #00ffff, #ff00ff, #00ff00);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+    margin-bottom: 40px;
+    font-family: 'Courier New', monospace;
+}
+
+.instructions-text {
+    font-size: 18px;
+    color: #00ffff;
+    margin-bottom: 40px;
+    line-height: 2;
+    text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+}
+
+.instructions-text p {
+    margin: 10px 0;
+}
+
+.start-btn {
+    background: linear-gradient(45deg, #00ffff, #00ff00);
+    border: 2px solid #00ffff;
+    color: black;
+    padding: 15px 50px;
+    font-size: 28px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+    text-transform: uppercase;
+}
+
+.start-btn:active {
+    transform: scale(0.95);
+    box-shadow: 0 0 30px rgba(0, 255, 255, 0.9);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .score-display {
+        font-size: 20px;
+    }
+
+    .game-over-title {
+        font-size: 48px;
+    }
+
+    .final-score {
+        font-size: 24px;
+    }
+
+    .restart-btn,
+    .resume-btn,
+    .start-btn {
+        padding: 12px 30px;
+        font-size: 20px;
+    }
+
+    .instructions-title {
+        font-size: 42px;
+    }
+
+    .instructions-text {
+        font-size: 16px;
+        line-height: 1.8;
+    }
+}
+
+@media (max-width: 480px) {
+    .score-display {
+        font-size: 18px;
+    }
+
+    .control-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+
+    .game-over-title {
+        font-size: 40px;
+    }
+
+    .final-score {
+        font-size: 20px;
+    }
+
+    .pause-title {
+        font-size: 40px;
+    }
+
+    .instructions-title {
+        font-size: 36px;
+        margin-bottom: 30px;
+    }
+
+    .instructions-text {
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .restart-btn,
+    .resume-btn,
+    .start-btn {
+        padding: 10px 25px;
+        font-size: 18px;
+        border-radius: 8px;
+    }
+}

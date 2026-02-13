@@ -43,6 +43,13 @@ function initializeGameConfig() {
     GAME_CONFIG.obstacleWidth = GAME_CONFIG.laneWidth * 0.8;
     GAME_CONFIG.obstacleHeight = minDimension * 0.12;
     GAME_CONFIG.coinRadius = minDimension * 0.03;
+    
+    // Update player dimensions
+    player.width = GAME_CONFIG.playerSize;
+    player.height = GAME_CONFIG.playerSize;
+    
+    // Update ground level after config is initialized
+    setGroundLevel();
 }
 initializeGameConfig();
 window.addEventListener('resize', initializeGameConfig);
@@ -57,8 +64,14 @@ let gameState = {
     time: 0,
     paused: false,
     lives: 1,
-    hasBooster: false
+    hasBooster: false,
+    groundLevel: 0  // Will be set based on canvas height
 };
+
+// Set ground level after canvas is ready
+function setGroundLevel() {
+    gameState.groundLevel = canvas.height * 0.65; // 65% down the screen (below middle)
+}
 
 // Player Object
 const player = {
@@ -180,7 +193,8 @@ function startGame() {
     gameState.distance = 0;
     gameState.time = 0;
     player.lane = 1;
-    player.y = canvas.height / 2 - player.height / 2; // Center vertically
+    player.y = gameState.groundLevel;
+    player.velocityY = 0;
     obstacles = [];
     coins = [];
     lastObstacleTime = 0;
@@ -206,7 +220,7 @@ function gameOver() {
         document.getElementById('gameOverScreen').classList.remove('hidden');
     } else {
         // Reset player position and continue
-        player.y = canvas.height / 2 - player.height / 2;
+        player.y = gameState.groundLevel;
         player.velocityY = 0;
         player.isJumping = false;
         player.isSliding = false;
@@ -225,7 +239,7 @@ function restartGame() {
     gameState.lives = 1;
     gameState.hasBooster = false;
     player.lane = 1;
-    player.y = canvas.height / 2 - player.height / 2;
+    player.y = gameState.groundLevel;
     player.velocityY = 0;
     player.isJumping = false;
     player.isSliding = false;
@@ -245,11 +259,14 @@ function updatePlayer() {
         player.velocityY += GAME_CONFIG.jumpGravity;
         player.y += player.velocityY;
 
-        if (player.y >= canvas.height - player.height - GAME_CONFIG.slideGravity) {
-            player.y = canvas.height - player.height;
+        if (player.y >= gameState.groundLevel) {
+            player.y = gameState.groundLevel;
             player.isJumping = false;
             player.velocityY = 0;
         }
+    } else {
+        // Keep player at ground level when not jumping
+        player.y = gameState.groundLevel;
     }
 
     // Handle sliding

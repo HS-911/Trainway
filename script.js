@@ -55,7 +55,9 @@ let gameState = {
     speed: GAME_CONFIG.initialSpeed,
     distance: 0,
     time: 0,
-    paused: false
+    paused: false,
+    lives: 1,
+    hasBooster: false
 };
 
 // Player Object
@@ -160,6 +162,17 @@ document.getElementById('resumeBtn').addEventListener('click', togglePause);
 document.getElementById('restartBtn').addEventListener('click', restartGame);
 
 function startGame() {
+    // Ask for easter egg code
+    const code = prompt('Enter a number for a possible surprise! 🎁');
+    if (code === '2013') {
+        gameState.lives = 3;
+        gameState.hasBooster = true;
+        alert('🎉 EASTER EGG UNLOCKED! You have 3 lives and a booster!');
+    } else {
+        gameState.lives = 1;
+        gameState.hasBooster = false;
+    }
+    
     document.getElementById('instructionsScreen').classList.add('hidden');
     gameState.currentState = GAME_STATE.RUNNING;
     gameState.score = 0;
@@ -167,6 +180,7 @@ function startGame() {
     gameState.distance = 0;
     gameState.time = 0;
     player.lane = 1;
+    player.y = canvas.height / 2 - player.height / 2; // Center vertically
     obstacles = [];
     coins = [];
     lastObstacleTime = 0;
@@ -184,10 +198,20 @@ function togglePause() {
 }
 
 function gameOver() {
-    gameState.currentState = GAME_STATE.GAME_OVER;
-    gameState.finalScore = gameState.score;
-    document.getElementById('finalScore').textContent = gameState.finalScore;
-    document.getElementById('gameOverScreen').classList.remove('hidden');
+    gameState.lives--;
+    if (gameState.lives <= 0) {
+        gameState.currentState = GAME_STATE.GAME_OVER;
+        gameState.finalScore = gameState.score;
+        document.getElementById('finalScore').textContent = gameState.finalScore;
+        document.getElementById('gameOverScreen').classList.remove('hidden');
+    } else {
+        // Reset player position and continue
+        player.y = canvas.height / 2 - player.height / 2;
+        player.velocityY = 0;
+        player.isJumping = false;
+        player.isSliding = false;
+        player.lane = 1;
+    }
 }
 
 function restartGame() {
@@ -198,8 +222,10 @@ function restartGame() {
     gameState.speed = GAME_CONFIG.initialSpeed;
     gameState.distance = 0;
     gameState.time = 0;
+    gameState.lives = 1;
+    gameState.hasBooster = false;
     player.lane = 1;
-    player.y = 0;
+    player.y = canvas.height / 2 - player.height / 2;
     player.velocityY = 0;
     player.isJumping = false;
     player.isSliding = false;
@@ -453,8 +479,20 @@ function drawCoins() {
 }
 
 function drawUI() {
-    // Score is drawn in HTML
-    // Nothing needed here as HUD is in HTML
+    // Draw lives and booster status
+    if (gameState.currentState === GAME_STATE.RUNNING) {
+        // Lives display
+        ctx.fillStyle = '#ff6b6b';
+        ctx.font = 'bold 20px Arial';
+        ctx.textAlign = 'right';
+        ctx.fillText(`Lives: ${gameState.lives}`, canvas.width - 20, 50);
+        
+        // Booster indicator
+        if (gameState.hasBooster) {
+            ctx.fillStyle = '#ffd700';
+            ctx.fillText('⭐ BOOSTER ACTIVE', canvas.width - 20, 80);
+        }
+    }
 }
 
 function drawGameScene() {

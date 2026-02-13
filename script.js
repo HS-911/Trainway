@@ -332,7 +332,10 @@ function updateObstacles() {
         } else {
             // Check collision
             if (checkCollision(player, obstacles[i])) {
-                gameOver();
+                // Only end game if player doesn't have booster (invincible mode)
+                if (!gameState.hasBooster) {
+                    gameOver();
+                }
             }
         }
     }
@@ -403,7 +406,7 @@ function updateGameState() {
     gameState.score = Math.floor(gameState.score + 0.1);
 
     // Check for win condition
-    if (gameState.score >= 2000) {
+    if (gameState.score >= 1000) {
         gameState.finalScore = gameState.score;
         gameState.currentState = GAME_STATE.WIN;
         gameState.catTouched = false;
